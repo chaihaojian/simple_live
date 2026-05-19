@@ -32,6 +32,26 @@ jobs:
           cd simple_live_app
           flutter pub get
 
+      - name: Create debug keystore
+        run: |
+          keytool -genkeypair \
+            -v \
+            -keystore simple_live_app/android/debug-keystore.jks \
+            -storepass android \
+            -keypass android \
+            -alias androiddebugkey \
+            -keyalg RSA \
+            -keysize 2048 \
+            -validity 10000 \
+            -dname "CN=Android Debug,O=Android,C=US"
+
+          cat > simple_live_app/android/key.properties <<EOF
+          storeFile=debug-keystore.jks
+          storePassword=android
+          keyPassword=android
+          keyAlias=androiddebugkey
+          EOF
+
       - name: Build Debug APK
         run: |
           cd simple_live_app
